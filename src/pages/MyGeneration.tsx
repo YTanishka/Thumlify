@@ -5,13 +5,13 @@ import SoftBackdrop from "../components/SoftBackdrop"
 
 const MyGeneration = () => {
 
-    // const [thumbnails, setThumbnails] = useState<IThumbnail>([])
-    // const [loading, setLoading] = useState(true)
+    //  const [thumbnails, setThumbnails] = useState<IThumbnail>([])
+    //  const [loading, setLoading] = useState(true)
 
-    // const fetchThumbnails = async ()=>{
+    //  const fetchThumbnails = async ()=>{
     //     setThumbnails(dummyThumbnails as unknown as IThumbnail[])
     //     setLoading(false)
-    // }
+    //  }
 
     // const handleDownload = (image_url: string) => {
     //     window.open(image_url, '_blank')
