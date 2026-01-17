@@ -3,8 +3,9 @@ import SoftBackdrop from "../components/SoftBackdrop"
 // import { dummyThumbnails, IThumbnail } from "../assets/assets"
 import type { IThumbnail } from "../assets/assets"
 import { dummyThumbnails } from "../assets/assets"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { div } from "motion/react-client"
+import { ArrowUpRightIcon, DownloadIcon, TrashIcon } from "lucide-react"
 
 
 const MyGeneration = () => {
@@ -18,13 +19,13 @@ const MyGeneration = () => {
     }
 
 
-     const [thumbnails, setThumbnails] = useState<IThumbnail[]>([])
-     const [loading, setLoading] = useState(false)
+    const [thumbnails, setThumbnails] = useState<IThumbnail[]>([])
+    const [loading, setLoading] = useState(false)
 
-     const fetchThumbnails = async ()=>{
-         setThumbnails(dummyThumbnails as unknown as IThumbnail[])
-         setLoading(false)
-     }
+    const fetchThumbnails = async () => {
+        setThumbnails(dummyThumbnails as unknown as IThumbnail[])
+        setLoading(false)
+    }
 
     const handleDownload = (image_url: string) => {
         window.open(image_url, '_blank')
@@ -34,9 +35,9 @@ const MyGeneration = () => {
         console.log(id)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchThumbnails()
-    },[])
+    }, [])
 
     return (
         <>
@@ -49,13 +50,13 @@ const MyGeneration = () => {
                 </div>
 
                 {/* LOADING */}
-                { loading && (
+                {loading && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="rounded-2xl bg-white/6 border border-white/10 animate-pulse h-[260px]" />
                         ))}
                     </div>
-                )} 
+                )}
                 {/* EMPTY STATE */}
                 {!loading && thumbnails.length === 0 && (
                     <div className="text-center py-24">
@@ -78,11 +79,35 @@ const MyGeneration = () => {
                                             <img src={thumb.image_url} alt={thumb.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-sm text-zinc-400">
-                                                {thumb.isGenerating? 'Generating' : 'No image'}
+                                                {thumb.isGenerating ? 'Generating' : 'No image'}
                                             </div>
                                         )}
                                         {thumb.isGenerating && <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-sm font-medium">Generating...</div>}
                                     </div>
+
+                                    {/* CONTENT */}
+                                    <div className="p-4 space-y-2">
+                                        <h3 className="text-sm font-semibold text-zinc-100 line-clamp-2">{thumb.title}</h3>
+                                        <div className="flex flex-wrap gap-2 text-xs text-zinc-400">
+                                            <span className='px-2 py-0.5 rounded bg-white/8'>{thumb.style}</span>
+                                            <span className='px-2 py-0.5 rounded bg-white/8'>{thumb.color_scheme}</span>
+                                            <span className='px-2 py-0.5 rounded bg-white/8'>{thumb.aspect_ratio}</span>
+                                        </div>
+                                        <p className="text-xs text-zinc-500">
+                                            {new Date(thumb.createdAt!).toDateString()}
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="absolute bottom-2 right-2 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <TrashIcon onClick={() => handleDelete(thumb._id)} className="size-6 bg-black/50 p-1 rounded hover:bg-pink-600 transition-all" />
+                                        <DownloadIcon onClick={() => handleDownload(thumb.image_url!)} className="size-6 bg-black/50 p-1 rounded hover:bg-pink-600 transition-all" />
+                                        <Link target="_blank" to={`/preview?thumbnail_url=${thumb.image_url}&title=${thumb.title}`}>
+                                            <ArrowUpRightIcon className="size-6 bg-black/50 p-1 rounded hover:bg-pink-600 transition-all" />
+                                        </Link>
+                                    </div>
+
                                 </div>
                             )
                         })}
